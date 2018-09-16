@@ -1,0 +1,81 @@
+---
+title: "Summary statistics and modeling approach to Booli housing data"
+output: github_document
+---
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+suppressPackageStartupMessages(library(knitr))
+suppressPackageStartupMessages(library(skimr))
+suppressPackageStartupMessages(library(dplyr))
+```
+
+```{r echo = FALSE}
+booli_data <- read.csv2("booli_data.csv")
+```
+
+###Summary statistics
+
+######Table 1. Summary statistics of the Booli dataset
+```{r echo = FALSE}
+skim_with(numeric = list(hist = NULL), integer = list(hist = NULL), 
+          factor = list(ordered  = NULL)) 
+
+booli_data %>%
+  skim() %>%
+  kable(caption = "Summary statistics of the booli dataset")
+```
+
+###First ten rows
+
+######Table 2. The first ten rows of the Booli dataset
+```{r echo=FALSE}
+booli_data  %>%
+  head(10) %>%
+  kable(caption = "The first ten rows of the booli dataset")
+```
+
+##Cleaning and other considerations about the data
+
+We notice a large amount of NAs in many of the variables, some seem to be actual unknowns (such as apartmentNumber) others (e.g. isNewConstruction) seem to be badly formatted boolean values with NAs instead of 0, or FALSE. 
+
+Most of the NAs looks fairly easy to handle either by imputing, converting to zeroes or by exclusion.
+
+Another feature of the dataset is the fact that some factor variables have a very large amount of levels, something which could potentially hamper some algoritms.
+
+Furthermore we can conclude that the dataset is well formated, in a tabular sense, and that it contains a fairly large amount of observations.
+
+Some feature engineering will probably have to take place, on one hand in consideration to domain knowledge and on another to eleviate some of the more troblesome NAs e.g. binning of location.distance.ocean.
+
+We can also note that the set of 30 features might necessitate some forms of more advanced feauture selection algorithms in case of more traditional modeling techniques like multivariate linear regression and the like. 
+
+##Modeling
+Predicting the selling price (SoldPrice) is, in machinelearning nomenclature, a supervised regression problem in the sense that outcomes are labeled and continous. I desbribe some plausible modeling approaches below.
+
+###Classic regression modeling
+A first approach to this kind of problem could be some variation of multivarate regression e.g. Linear, Lasso or the like.
+
+This probably isn't the best approach due to the nature of the data, lots of factor variabels (whith many levels), inherently non-linear dependencies (it´s timeseries data) and so on. However it´s probably possible the create a decent model with the help of som feature engineering which might serve as a baseline. The inherent interpretability of classical regression models could also aid in modeling using more novel algoritms.
+
+Another advantage of the above approach is the expected wealth of previous work using such modeling techniques. 
+
+###Boosted trees
+Approaches using variations of boosted trees (forests really), e.g. gradient boosting have proven quite successfull on tabular data. Advantages are ease of implementation, interpretability, good performance out of the box (i.e. without much tuning) boosted trees are however prone to overfitting so thats something to be wary of. They also lend themselves to feature engineering.
+
+###Deep learning and other neural network techniques
+And dont know that much about it but hope to learn :) 
+
+They are of course black box, requires large datasets, and are sensitive to tuning. Have proven to deliver amazing results in certain settings though, but perhaps most so in reinforcement learning.
+
+###Ensemble techniques
+Ensemble techniques are know to be prevalous for prediction, for example on competition sites like kaggle, and are a good reason to explore several different modeling aproaches. 
+
+The technique entails using several different models and letting them "vote" on the result.
+
+/Andreas
+
+```{r}
+sessionInfo()
+```
+
+
+

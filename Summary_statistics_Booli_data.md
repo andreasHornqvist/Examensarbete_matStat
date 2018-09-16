@@ -1,8 +1,9 @@
-Summary statistics of Booli housing data
+Summary statistics and modeling approach to Booli housing data
 ================
 
-Summary statistics
-------------------
+### Summary statistics
+
+###### Table 1. Summary statistics of the Booli dataset
 
     ## Skim summary statistics  
     ##  n obs: 397048    
@@ -58,8 +59,9 @@ Summary statistics
     ##             rooms                6544       390504     397048       2.96          1.52         1         2          3          4         39    
     ##           soldPrice                0        397048     397048    2429977.38    1909707.74    15000    1200000     2e+06     3100000    9.8e+07
 
-First ten rows
---------------
+### First ten rows
+
+###### Table 2. The first ten rows of the Booli dataset
 
 | location.address.streetAddress | location.position.latitude | location.position.longitude |  location.namedAreas  | location.region.municipalityName | location.region.countyName | location.distance.ocean | listPrice | rent | floor | livingArea |               source.name              | source.id | source.type |             source.url            | rooms |  published | constructionYear | objectType | booliId |  soldDate  | soldPrice | soldPriceSource |                  url                  | plotArea | additionalArea | apartmentNumber | isNewConstruction | location.address.city | location.position.isApproximate |
 |:------------------------------:|:--------------------------:|:---------------------------:|:---------------------:|:--------------------------------:|:--------------------------:|:-----------------------:|:---------:|:----:|:-----:|:----------:|:--------------------------------------:|:---------:|:-----------:|:---------------------------------:|:-----:|:----------:|:----------------:|:----------:|:-------:|:----------:|:---------:|:---------------:|:-------------------------------------:|:--------:|:--------------:|:---------------:|:-----------------:|:---------------------:|:-------------------------------:|
@@ -88,3 +90,64 @@ Furthermore we can conclude that the dataset is well formated, in a tabular sens
 Some feature engineering will probably have to take place, on one hand in consideration to domain knowledge and on another to eleviate some of the more troblesome NAs e.g. binning of location.distance.ocean.
 
 We can also note that the set of 30 features might necessitate some forms of more advanced feauture selection algorithms in case of more traditional modeling techniques like multivariate linear regression and the like.
+
+Modeling
+--------
+
+Predicting the selling price (SoldPrice) is, in machinelearning nomenclature, a supervised regression problem in the sense that outcomes are labeled and continous. I desbribe some plausible modeling approaches below.
+
+### Classic regression modeling
+
+A first approach to this kind of problem could be some variation of multivarate regression e.g. Linear, Lasso or the like.
+
+This probably isn't the best approach due to the nature of the data, lots of factor variabels (whith many levels), inherently non-linear dependencies (it´s timeseries data) and so on. However it´s probably possible the create a decent model with the help of som feature engineering which might serve as a baseline. The inherent interpretability of classical regression models could also aid in modeling using more novel algoritms.
+
+Another advantage of the above approach is the expected wealth of previous work using such modeling techniques.
+
+### Boosted trees
+
+Approaches using variations of boosted trees (forests really), e.g. gradient boosting have proven quite successfull on tabular data. Advantages are ease of implementation, interpretability, good performance out of the box (i.e. without much tuning) boosted trees are however prone to overfitting so thats something to be wary of. They also lend themselves to feature engineering.
+
+### Deep learning and other neural network techniques
+
+And dont know that much about it but hope to learn :)
+
+They are of course black box, requires large datasets, and are sensitive to tuning. Have proven to deliver amazing results in certain settings though, but perhaps most so in reinforcement learning.
+
+### Ensemble techniques
+
+Ensemble techniques are know to be prevalous for prediction, for example on competition sites like kaggle, and are a good reason to explore several different modeling aproaches.
+
+The technique entails using several different models and letting them "vote" on the result.
+
+/Andreas
+
+``` r
+sessionInfo()
+```
+
+    ## R version 3.4.3 (2017-11-30)
+    ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
+    ## Running under: macOS High Sierra 10.13.1
+    ## 
+    ## Matrix products: default
+    ## BLAS: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRblas.0.dylib
+    ## LAPACK: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRlapack.dylib
+    ## 
+    ## locale:
+    ## [1] sv_SE.UTF-8/sv_SE.UTF-8/sv_SE.UTF-8/C/sv_SE.UTF-8/sv_SE.UTF-8
+    ## 
+    ## attached base packages:
+    ## [1] stats     graphics  grDevices utils     datasets  methods   base     
+    ## 
+    ## other attached packages:
+    ## [1] bindrcpp_0.2 dplyr_0.7.4  skimr_1.0.3  knitr_1.18  
+    ## 
+    ## loaded via a namespace (and not attached):
+    ##  [1] Rcpp_0.12.15     bindr_0.1        magrittr_1.5     tidyselect_0.2.4
+    ##  [5] R6_2.2.2         rlang_0.2.2      highr_0.6        stringr_1.2.0   
+    ##  [9] tools_3.4.3      htmltools_0.3.6  yaml_2.1.16      rprojroot_1.3-2 
+    ## [13] digest_0.6.15    assertthat_0.2.0 tibble_1.4.2     purrr_0.2.4     
+    ## [17] tidyr_0.7.2      glue_1.2.0       evaluate_0.10.1  rmarkdown_1.8   
+    ## [21] stringi_1.1.6    compiler_3.4.3   pillar_1.1.0     backports_1.1.2 
+    ## [25] pkgconfig_2.0.1
